@@ -1,0 +1,11 @@
+{
+  "name": "RealTimeWebChat",
+  "version": "0.0.1",
+  "description": "web chat will be ported to D2Auc application",
+  "dependencies": {
+    "express": "latest",
+    "jade": "latest",
+    "socket.io": "latest"
+  },
+  "author": "shepelev_developer"
+}
