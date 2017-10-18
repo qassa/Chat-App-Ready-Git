@@ -8,6 +8,6 @@
     "jade": "latest",
     "socket.io": "latest"
   },
-  "scripts": { "start": "index1.js" },
+  "scripts": { "start": "node index1.js" },
   "author": "shepelev_developer"
 }
