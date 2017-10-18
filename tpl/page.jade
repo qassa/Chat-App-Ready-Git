@@ -4,7 +4,10 @@ html
         title= "Real time web chat"
 
     body
-        #content(style='width: 500px; height: 300px; margin: 0 0 20px 0; border: solid 1px #999; overflow-y: scroll;')
+        #content(style='display:block; width: 500px; height: 300px; margin: 0 0 10px 0; border: solid 1px #999; overflow-y: scroll;')
+        #message_control(style='display:none; width: 500px; height: 20px; background: red; text-align: center;') Текст сообщения 
+        br
+        input#name_holder(style='width: 70px;')
         .controls
             input#field(style='width:350px;')
             input#send(type='button', value='send')

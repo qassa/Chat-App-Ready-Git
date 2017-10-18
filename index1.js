@@ -1,19 +1,14 @@
 var express = require('express');
-var antiSpam = require('socket-anti-spam');
+var sanitizer = require('./sanitize_helper')();
 var app = express();
-//в отличие от index1.js все require вынесены вверх
+var server = require('http').Server(app);
+var chat = require('./chat_main')(server); //при попытке передать вместо http_server app -> error 'Please, parse an http.Server instance'
+//Это значит, что выражение app.listen(port); возвращает server. Да, так оно и есть. В application.js выполняется такой участок кода
+//app.listen = function listen() {
+//  var server = http.createServer(this);
+//  return server.listen.apply(server, arguments);
+//};
 var port = 3700;
-io = require('socket.io').listen(app.listen(port));
-
-antiSpam.init({
-	banTime: 0.1,
-	kickThreshold: 10,
-	kickTimesBeforeBan: 2,
-	banning: true,
-	heartBeatStale: 40,
-	heartBeatCheck: 4,
-	io: io,
-})
 
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
@@ -23,25 +18,19 @@ app.get("/", function(req, res){
 });
 
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(expressSanitizer());
 
-io.sockets.on('connection', function(socket){
-	socket.emit('message', {message: 'welcome to the chat'});
-	console.log('Выполнено подключение нового пользователя к чату');
+server.listen(port);
 
-	socket.on('send',function (data){
-		io.sockets.emit('message', data);
-		antiSpam.addSpam(socket);
-	});
+app.get('/id', function(req, res) {
+  console.log('получен get запрос');
+ 	//res.sendStatus(500);
+  // replace an HTTP posted body property with the sanitized string 
+  req.query.sanitizedParam1 = req.sanitize(req.query.param1);
+  req.query.sanitizedParam2 = req.sanitize(req.query.param2);
+  	console.log(req);
 });
-
-antiSpam.event.on('ban', (socket, data) => {
-	console.log('пользователь '+socket+' был заблокирован\n');
-	console.log(data);
-})
-
-antiSpam.event.on('spamscore', (socket, data) => { 
-	console.log(data.score)
-})
-
 
 console.log("Listening on port "+port);
