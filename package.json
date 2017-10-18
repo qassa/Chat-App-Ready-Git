@@ -4,6 +4,7 @@
   "description": "web chat will be ported to D2Auc application",
   "dependencies": {
     "express": "latest",
+    "express-sanitizer": "^1.0.2",
     "jade": "latest",
     "socket.io": "latest"
   },
